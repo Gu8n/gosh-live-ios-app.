@@ -12,10 +12,15 @@ struct ContentView: View {
 
 struct GoshWebView: UIViewRepresentable {
 
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
     func makeUIView(context: Context) -> WKWebView {
 
         let config = WKWebViewConfiguration()
 
+        // Compatibilidad con reproducción de audio y video
         config.allowsInlineMediaPlayback = true
         config.mediaTypesRequiringUserActionForPlayback = []
 
@@ -28,10 +33,11 @@ struct GoshWebView: UIViewRepresentable {
             configuration: config
         )
 
+        webView.uiDelegate = context.coordinator
+
         webView.backgroundColor = .black
         webView.scrollView.backgroundColor = .black
         webView.scrollView.bounces = false
-
         webView.allowsBackForwardNavigationGestures = true
 
         if let url = URL(string: "https://gosh.com/") {
@@ -45,4 +51,23 @@ struct GoshWebView: UIViewRepresentable {
         _ uiView: WKWebView,
         context: Context
     ) {}
+
+    class Coordinator: NSObject, WKUIDelegate {
+
+        // Gestiona ventanas emergentes dentro de la aplicación
+        func webView(
+            _ webView: WKWebView,
+            createWebViewWith configuration: WKWebViewConfiguration,
+            for navigationAction: WKNavigationAction,
+            windowFeatures: WKWindowFeatures
+        ) -> WKWebView? {
+
+            guard navigationAction.targetFrame == nil else {
+                return nil
+            }
+
+            webView.load(navigationAction.request)
+            return nil
+        }
+    }
 }
