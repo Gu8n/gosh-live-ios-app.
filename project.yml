@@ -1,0 +1,20 @@
+
+name: GoshLive
+
+options:
+  bundleIdPrefix: com.doria
+
+targets:
+  GoshLive:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources:
+      - path: Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.doria.goshlive
+        PRODUCT_NAME: GoshLive
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        
